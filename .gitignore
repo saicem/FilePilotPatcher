@@ -35,6 +35,7 @@ __pycache__/
 !/binaries/release/FPilot-all-patches.exe
 !/binaries/release/FPilot-0.8.5-open-location-tab-merge.exe
 !/binaries/release/FPilot-0.8.5-all-patches.exe
+/binaries/release/dialogs/
 
 # Ghidra per-user and transient state
 /ghidra/project/*.lock

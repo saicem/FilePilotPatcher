@@ -1,5 +1,14 @@
 # Research notes
 
+- [Dialog coverage and Paint investigation](filepilot-dialog-coverage.md) records
+  COM/external/WinRT routing, native fallback limits and Paint's read-only metadata.
+- [COM replacement and system DLL research](filepilot-com-replacement-and-system-dll-research.md)
+  compares activation overrides with replacing Windows DLLs.
+- [Native picker UI scheme](filepilot-native-picker-style-scheme.md) maps FilePilot's
+  own widgets, drawing and input layers.
+- [FilePilot dialogs without an application launcher](filepilot-universal-dialog-scheme.md)
+  records the earlier injection-agent design and delivery alternatives.
+
 - [File-operation undo/redo design](filepilot-undo-redo-design.md) maps the 0.8.5
   operation engine and proposes completion-based history with native keybindings.
 - `filepilot-combined-patch.md` summarizes the earlier combined patch flow.

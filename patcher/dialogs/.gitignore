@@ -1,0 +1,4 @@
+/build-x64/
+/build-x86/
+/CMakeUserPresets.json
+/vendor/minhook/build/
