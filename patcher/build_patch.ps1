@@ -7,7 +7,11 @@ param(
     [switch]$All,
     [switch]$Archives,
     [switch]$Startup,
-    [switch]$Undo
+    [switch]$Undo,
+    [switch]$Dialogs,
+    [switch]$DialogsOnly,
+    [switch]$WinRT,
+    [string]$DialogOutputDirectory = (Join-Path $PSScriptRoot '..\binaries\release\dialogs')
 )
 
 $ErrorActionPreference = 'Stop'
@@ -15,6 +19,15 @@ $includeUnicode = $All
 $includeUndo = $All -or $Undo
 $includeArchives = $All -or $Archives
 $includeStartup = $All -or $Startup
+$includeDialogs = $All -or $Dialogs -or $DialogsOnly -or $WinRT
+if ($DialogsOnly -and ($All -or $OpenLocationOnly -or $Archives -or $Startup -or $Undo)) {
+    throw '-DialogsOnly cannot be combined with executable patch profiles'
+}
+if ($DialogsOnly) {
+    & (Join-Path $PSScriptRoot 'dialogs\build.ps1') -InputExe $InputExe `
+        -OutputDirectory $DialogOutputDirectory -PythonExe $PythonExe -IncludeWinRT:$WinRT
+    return
+}
 if ($All -and $OpenLocationOnly) {
     throw '-All cannot be combined with -OpenLocationOnly'
 }
@@ -135,4 +148,8 @@ try {
 }
 finally {
     Pop-Location
+}
+if ($includeDialogs) {
+    & (Join-Path $PSScriptRoot 'dialogs\build.ps1') -InputExe $InputExe `
+        -OutputDirectory $DialogOutputDirectory -PythonExe $PythonExe -IncludeWinRT:$WinRT
 }

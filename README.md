@@ -3,15 +3,15 @@
 # File Pilot reverse-engineering project
 
 This repository contains the Ghidra analysis, patcher, regression fixtures, and
-research notes for the File Pilot 0.8.2 Open File Location and tab-transport
-modifications.
+research notes for File Pilot 0.8.2/0.8.5 modifications and the native Open/Save
+dialog replacement.
 
 ## Repository layout
 
 - `patcher/` - maintained patcher source, payload, build wrapper, and tests.
 - `ghidra/project/` - the current Ghidra project and analysis database.
 - `ghidra/scripts/` - FilePilot-specific Ghidra automation.
-- `binaries/input/` - the unmodified File Pilot 0.8.2 patch input.
+- `binaries/input/` - the unmodified File Pilot 0.8.5 patch input.
 - `binaries/regression/` - known builds used by regression tests.
 - `binaries/release/` - the current combined patched executable.
 - `docs/` - design notes and historical implementation documentation.
@@ -35,8 +35,8 @@ Set-Location .\patcher
 python -m unittest -v .\test_locator.py
 ```
 
-The default build reads `binaries/input/FPilot-original.exe` and writes
-`binaries/release/FPilot-open-location-tab-merge.exe`.
+The default build reads `binaries/input/FPilot-0.8.5.exe` and writes
+`binaries/release/FPilot-0.8.5-open-location-tab-merge.exe`.
 
 To build every maintained patch, use the combined profile:
 
@@ -45,7 +45,7 @@ To build every maintained patch, use the combined profile:
 ```
 
 This writes
-`binaries/release/FPilot-all-patches.exe` and its JSON manifest. It
+`binaries/release/FPilot-0.8.5-all-patches.exe` and its JSON manifest. It
 contains Open File Location, tab creation/tear-off, cross-window tab merge, the
 fixed native-row Unicode renderer, and the native context-menu cache. DirectWrite
 shapes and rasterizes extended text into cached immutable R8 resources, then File Pilot emits them as ordinary
@@ -66,6 +66,24 @@ included only for background menus, whose Paste state depends on it. This avoids
 `IContextMenu::QueryContextMenu` enumeration for recent contexts and prevents
 Shell teardown from entering the right-click open path. See
 [docs/filepilot-context-menu-cache.md](docs/filepilot-context-menu-cache.md).
+
+## Open and Save As dialogs
+
+Build the dedicated FilePilot 0.8.5 picker and x64/x86 modern-dialog COM bridges:
+
+```powershell
+& .\patcher\build_patch.ps1 -DialogsOnly
+# Include the optional Windows Runtime provider:
+& .\patcher\build_patch.ps1 -DialogsOnly -WinRT
+```
+
+The `-All` profile also builds the COM/external dialog package alongside the
+patched executable. Builds do not install providers or run tests. Install the
+generated package separately using `binaries/release/dialogs/install-com.ps1`;
+WinRT registration uses its separate elevated installer. COM and WinRT use
+normal DLL loading; the external fallback observes native windows after creation
+and can still flash. See [dialog instructions](patcher/dialogs/README.md) and
+[coverage analysis](docs/filepilot-dialog-coverage.md).
 
 ## Ghidra
 

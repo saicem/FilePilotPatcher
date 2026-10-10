@@ -285,3 +285,27 @@ DLL is required. Ctrl+Z undoes; Ctrl+Y or Ctrl+Shift+Z redoes. File-move drops a
 recorded in shared session history across FilePilot processes. Replay submits one
 Shell operation per batch. Close all FilePilot processes when upgrading.
 Runtime validation of the latest composition has not been performed.
+
+## Open and Save As replacement
+
+`build_patch.ps1 -All` now also builds the separate dialog package. Use
+`-Dialogs` alongside an executable patch profile, or `-DialogsOnly` to build
+just the dialogs. Add `-WinRT` to package the optional Windows Runtime provider;
+`-DialogOutputDirectory` selects the output folder. The normal patched executable
+and dedicated picker remain separate, and the picker requires the original
+FilePilot 0.8.5 input.
+
+```powershell
+& .\build_patch.ps1 -DialogsOnly -WinRT
+& ..\binaries\release\dialogs\install-com.ps1 -Action Install
+# Optional WinRT registration, from elevated 64-bit PowerShell:
+& ..\binaries\release\dialogs\install-winrt.ps1 -Action Install
+```
+
+Builds compile production targets only and leave registration unchanged.
+COM replacement uses ordinary activation for the current user; an external
+watcher covers recognizable native dialogs that bypass it and can still flash.
+The WinRT provider has a separate reversible machine registration. Neither mode
+remotely injects a DLL or replaces Windows system DLL files. The retained API
+injection agent is an explicit alternative mode. Installation, recovery, native
+UI behavior and coverage limits are documented in [dialogs/README.md](dialogs/README.md).

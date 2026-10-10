@@ -1,0 +1,4 @@
+LIBRARY FPilotDialogWinRT
+EXPORTS
+    DllGetActivationFactory PRIVATE
+    DllCanUnloadNow PRIVATE

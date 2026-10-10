@@ -1,0 +1,4 @@
+EXPORTS
+    FilePilotInstall
+    FilePilotAgentAttach
+    FilePilotTestNext
